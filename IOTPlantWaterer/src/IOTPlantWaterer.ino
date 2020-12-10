@@ -52,6 +52,7 @@ void loop() {
   Serial.println(analogvalue); //print the value to serial port
   if(analogvalue > 2.6){
       digitalWrite(Relay, HIGH);
+      Serial.println(" Dry soil !!! It has started watering !!!");
   }
   else if(analogvalue < 2.5 && analogvalue > 1.3){
       digitalWrite(Relay, LOW);

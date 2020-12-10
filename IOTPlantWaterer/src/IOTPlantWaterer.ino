@@ -41,7 +41,7 @@ void sleep()
   SystemSleepConfiguration config;
   config.mode(SystemSleepMode::STOP).duration(30s); //60 sec
   System.sleep(config);
-  Particle.publish(HOOK_PUB, data, PRIVATE);
+  
 }
 
 // loop() runs over and over again, as quickly as it can execute.
@@ -56,12 +56,13 @@ void loop() {
   else if(analogvalue < 2.5 && analogvalue > 1.3){
       digitalWrite(Relay, LOW);
       Serial.println(" Normal humidity!!!!");
+      Particle.publish(HOOK_PUB, PRIVATE);
   }
   
   else if (analogvalue < 1.3){
             Serial.println("Very high humidity !!!!");
   }
-  delay(1);
+  delay(60000);
   
   //Serial.println("Going to sleep");
   //sleep();

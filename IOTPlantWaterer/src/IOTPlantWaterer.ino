@@ -1,10 +1,3 @@
-/*
- * Project Weatherforecast
- * Description:
- * Author:
- * Date:
- */
-
 #define HOOK_RESP "hook-response/TempHook"
 #define HOOK_PUB "TempHook"
 #define lessWet 3250
@@ -13,8 +6,10 @@
 
 // setup() runs once, when the device is first turned on.
 int MoistSense = A0; //Moistsensor / ADC 0
-int Relay = A4;
-float analogvalue; // Here we are declaring the integer variable analogvalue,
+int Relay = A1;      //Moistsensor / Digital out
+int analogvalue;
+
+
 //float bitres = 0.0008; // 100 microVolt
 //int bits = 4096;       // The number of bits
 void water(int);
@@ -36,9 +31,13 @@ void myHandler(const char *event, const char *data)
     if (analogvalue < lessWet && analogvalue > moreWet)
     {
       Serial.println("No rain in sight!");
+      water(moreWet);
+    }
+    else
+    {
+      Serial.println("No rain in sight!");
+      Serial.println("No worries, it's wet enough");
     };
-
-    water(moreWet);
   };
 }
 
@@ -47,6 +46,7 @@ void setup()
 {
   // Put initialization like pinMode and begin functions here.
   Particle.subscribe(HOOK_RESP, myHandler, MY_DEVICES);
+  pinMode(Relay, OUTPUT);
   //Particle.subscribe("jsonTest", myHandler);
   Serial.begin(115200);
 }
@@ -59,7 +59,6 @@ void sleep()
       .duration(30s); //60 sec
 
   System.sleep(config);
-  //Particle.publish(HOOK_PUB, PRIVATE);
 }
 
 // loop() runs over and over again, as quickly as it can execute.
@@ -76,18 +75,7 @@ void loop()
   if (analogvalue > lessWet)
   {
     Serial.println(analogvalue);
-    digitalWrite(Relay, HIGH);
-    Serial.println("Starting to water!");
-    // Emergency watering
-    // 2,6V || 3250
-    while (analogvalue > lessWet)
-    {
-      analogvalue = analogRead(MoistSense);
-      Serial.println(analogvalue);
-      //String temp = analogvalue;
-    }
-    Serial.println("Stopped watering!");
-    digitalWrite(Relay, LOW);
+    water(lessWet);
   }
 
   // Less wet
@@ -111,6 +99,9 @@ void loop()
   {
     Serial.println("Very high humidity !!!!");
   }
+
+  Serial.println("Delaying");
+
   delay(60000);
 
   //Serial.println("Going to sleep");
@@ -122,12 +113,12 @@ void water(int temp)
 {
   digitalWrite(Relay, HIGH);
   Serial.println("Starting to water!");
+
   // 2,6V || 3250
   while (analogvalue > temp)
   {
     analogvalue = analogRead(MoistSense);
     Serial.println(analogvalue);
-    //String temp = analogvalue;
   }
   Serial.println("Stopped watering!");
   digitalWrite(Relay, LOW);
@@ -144,3 +135,7 @@ void water(int temp)
         "lon": "10.2303381",
         "mode": "json",
         "exclude": "current,minutely,daily,alerts",
+        "appid": "API key"
+    }
+}
+*/

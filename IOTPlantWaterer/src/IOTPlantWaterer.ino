@@ -1,8 +1,8 @@
 /*
- * Project IOT Plant Waterer
- * Description: Waters plants depending on forecast
- * Author: Mevlüt & Tommy
- * Date: 121220
+ * Project Weatherforecast
+ * Description:
+ * Author:
+ * Date:
  */
 
 #define HOOK_RESP "hook-response/TempHook"
@@ -33,7 +33,11 @@ void myHandler(const char *event, const char *data)
   }
   else
   {
-    Serial.println("No rain in sight!");
+    if (analogvalue < lessWet && analogvalue > moreWet)
+    {
+      Serial.println("No rain in sight!");
+    };
+
     water(moreWet);
   };
 }
@@ -96,7 +100,7 @@ void loop()
 
   // More wet
   // 1,62V && 1,3V || 2025 && 1625
-  else if (analogvalue < lessWet && analogvalue > Wet)
+  else if (analogvalue < moreWet && analogvalue > Wet)
   {
     Particle.publish(HOOK_PUB, PRIVATE);
     Serial.println(" MoreWet humidity!!!!");
@@ -133,17 +137,10 @@ void water(int temp)
 {
     "event": "TempHook",
     "url": "https://api.openweathermap.org/data/2.5/onecall?",
-    "requestType": "POST",
-    "noDefaults": true,
-    "rejectUnauthorized": false,
+    "requestType": "GET",
     "responseTemplate": "{{hourly.1.rain.1h}},{{hourly.2.rain.1h}},",
     "query": {
         "lat": "56.2316307",
         "lon": "10.2303381",
         "mode": "json",
         "exclude": "current,minutely,daily,alerts",
-        "appid": "apikey"
-    }
-}
-*/
-

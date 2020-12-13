@@ -1,0 +1,13 @@
+{
+    "event": "TempHook",
+    "url": "https://api.openweathermap.org/data/2.5/onecall?",
+    "requestType": "GET",
+    "responseTemplate": "{{hourly.1.rain.1h}},{{hourly.2.rain.1h}},",
+    "query": {
+        "lat": "56.2316307",
+        "lon": "10.2303381",
+        "mode": "json",
+        "exclude": "current,minutely,daily,alerts",
+        "appid": "API KEY"
+    }
+}
